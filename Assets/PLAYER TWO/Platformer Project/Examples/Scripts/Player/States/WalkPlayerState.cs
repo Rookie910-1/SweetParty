@@ -17,6 +17,7 @@ public class WalkPlayerState : PlayerState
     {
         player.Gravity();
         player.Fall();
+        player.Jump();
         var inputDirection = player.inputs.GetMovementCamerDirection();
 
         if(inputDirection.sqrMagnitude > 0 )

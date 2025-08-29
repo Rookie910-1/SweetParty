@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1550898406063213424, guid: 91b600cc88827ef4392ecdea6ec1f7c4, type: 3}
+      propertyPath: states.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5321221517395817093, guid: 91b600cc88827ef4392ecdea6ec1f7c4, type: 3}
       propertyPath: m_Center.y
       value: 0.9
@@ -148,7 +152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6350208780345698564, guid: 91b600cc88827ef4392ecdea6ec1f7c4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.706
+      value: 4.807
       objectReference: {fileID: 0}
     - target: {fileID: 6350208780345698564, guid: 91b600cc88827ef4392ecdea6ec1f7c4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -184,7 +188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6893533564578764033, guid: 91b600cc88827ef4392ecdea6ec1f7c4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.9
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5321221517395817093, guid: 91b600cc88827ef4392ecdea6ec1f7c4, type: 3}

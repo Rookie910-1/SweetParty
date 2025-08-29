@@ -94,4 +94,31 @@ public class Player : Entity<Player>
         }
     }
 
+    public virtual void Jump()
+    {
+        var canMultiJump = (jumpCounter > 0) && (jumpCounter < stats.current.multiJumps);
+        var canCoyoteJump = (jumpCounter == 0) && (Time.time < lastGroundTime + stats.current.coyoteJumpThreshold);
+
+        if(isGrounded || canMultiJump || canCoyoteJump) 
+        {
+            if(inputs.GetJumpDown())
+            {
+                Jump(stats.current.maxJumpHeight);
+            }
+        }
+
+        if(inputs.GetJumpUp() && jumpCounter >0 && verticalVelocity.y > stats.current.miniJumpHeight)
+        {
+            verticalVelocity = Vector3.up * stats.current.miniJumpHeight;
+        }
+    }
+
+    public virtual void Jump(float height)
+    {
+        jumpCounter++;
+        verticalVelocity=Vector3.up * height;
+        states.Change<FallPlayerState>();
+        playerEvents.OnJump?.Invoke();
+    }
+
 }

@@ -33,6 +33,7 @@ public class BreakPlayerState : PlayerState
                 player.states.Change<IdelPlayerState>();
             }
         }*/
+        player.Jump();
         player.Fall();
         player.Decelerate();
 

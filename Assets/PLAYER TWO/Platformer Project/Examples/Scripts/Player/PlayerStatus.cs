@@ -27,7 +27,11 @@ public class PlayerStatus : EntityStatus<PlayerStatus>
     public float backflipAirAcceleration = 12f;
     public float backflipTopSpeed=7.5f;
     public float backflipBackwardTurnForece = 8f;
-
+    [Header("Jump stats")]
+    public int multiJumps = 1;
+    public float coyoteJumpThreshold = 0.15f;
+    public float maxJumpHeight = 17f;
+    public float miniJumpHeight = 10f;
 
 }
 
