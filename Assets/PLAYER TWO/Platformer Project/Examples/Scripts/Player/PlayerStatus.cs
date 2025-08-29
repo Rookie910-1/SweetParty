@@ -5,6 +5,9 @@ public class PlayerStatus : EntityStatus<PlayerStatus>
     [Header("General Status")]
     public float rotationSpeed = 970f;
     public float friction = 16f;
+    public float gravityTopSpeed = 50f;
+    public float gravity = 38f;
+    public float fallGravity = 65f;
     [Header("Motion Status")]
     public float breakThreshold = -0.8f;
     public float turningDrag = 28f;

@@ -70,6 +70,7 @@ public abstract class EntityStateManager<T> : EntityStateManager where T : Entit
         if(m_states.ContainsKey(type))
         {
             Change(m_states[type]);
+            Debug.Log(type.Name);
         }
     }
 

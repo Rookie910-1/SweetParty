@@ -15,27 +15,32 @@ public class BreakPlayerState : PlayerState
 
     protected override void OnStep(Player player)
     {
-        var inputDirection = player.inputs.GetMovementCamerDirection();
 
-        if(player.stats.current.canBackflip && Vector3.Dot(inputDirection,player.transform.forward) <0 && 
+        /*var inputDirection = player.inputs.GetMovementCamerDirection();
+
+        if (player.stats.current.canBackflip && Vector3.Dot(inputDirection, player.transform.forward) < 0 &&
             player.inputs.GetJumpDown())
         {
             player.Backflip(player.stats.current.backflipBackwardTurnForece);
         }
         else
         {
-            if(player.lateralVelocity.sqrMagnitude==0)
+            player.Fall();
+            player.Decelerate();
+
+            if (player.lateralVelocity.sqrMagnitude == 0)
             {
                 player.states.Change<IdelPlayerState>();
             }
-        }
-
+        }*/
+        player.Fall();
         player.Decelerate();
 
-        if(player.lateralVelocity.sqrMagnitude ==0)
+        if (player.lateralVelocity.sqrMagnitude == 0)
         {
             player.states.Change<IdelPlayerState>();
         }
+
     }
 }
 

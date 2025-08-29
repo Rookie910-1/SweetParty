@@ -13,7 +13,10 @@ public class IdelPlayerState : PlayerState
 
     protected override void OnStep(Player player)
     {
+        player.Gravity();
+        player.Fall();
         player.Friction();
+
         var inputDirection = player.inputs.GetMovementDirection();
 
         if(inputDirection.sqrMagnitude >0 || player.lateralVelocity.sqrMagnitude >0 )

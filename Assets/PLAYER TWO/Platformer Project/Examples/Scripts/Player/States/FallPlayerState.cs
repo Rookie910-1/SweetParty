@@ -1,31 +1,25 @@
 ﻿
 using UnityEngine;
 
-public class BackflipPlayerState : PlayerState
+public class FallPlayerState : PlayerState
 {
     protected override void OnEnter(Player player)
     {
-       
+
     }
 
     protected override void OnExit(Player player)
     {
-        
+
     }
 
     protected override void OnStep(Player player)
     {
-        player.Gravity(player.stats.current.backflipGravity);
-        player.BackflipAcceleration();
-
+        player.Gravity();
+        player.FaceDirectionSmooth(player.lateralVelocity);
         if(player.isGrounded)
         {
-            player.lateralVelocity = Vector3.zero;
             player.states.Change<IdelPlayerState>();
-        }
-        else
-        {
-
         }
     }
 }

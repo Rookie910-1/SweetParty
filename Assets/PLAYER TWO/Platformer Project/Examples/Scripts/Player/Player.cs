@@ -70,8 +70,28 @@ public class Player : Entity<Player>
    }
 
    public virtual void Friction()
-    {
+   {
         Decelerate(stats.current.friction);
+   }
+
+   public virtual void Gravity()
+   {
+        if(!isGrounded && verticalVelocity.y > -stats.current.gravityTopSpeed)
+        {
+            var speed = verticalVelocity.y;
+            var force = verticalVelocity.y > 0 ? stats.current.gravity : stats.current.fallGravity;
+            speed -= force * gravityMultiplier * Time.deltaTime;
+            speed = Mathf.Max(speed, -stats.current.gravityTopSpeed);
+            verticalVelocity = new Vector3(0, speed, 0);
+        }
+   }
+
+    public virtual void Fall()
+    {
+        if(!isGrounded)
+        {
+            states.Change<FallPlayerState>();
+        }
     }
 
 }

@@ -58,7 +58,7 @@ public class PlayerInputManager : MonoBehaviour
         var deadZone = InputSystem.settings.defaultDeadzoneMin;
         axis.x = Mathf.Abs(axis.x) > deadZone ? RemapToDeadZone(axis.x,deadZone) : 0;
         axis.y = Mathf.Abs(axis.y) > deadZone ? RemapToDeadZone(axis.y, deadZone) : 0;
-        return new Vector3(axis.x, axis.y);
+        return new Vector3(axis.x, 0, axis.y);
     }
 
     protected float RemapToDeadZone(float value,float deadZone) 
