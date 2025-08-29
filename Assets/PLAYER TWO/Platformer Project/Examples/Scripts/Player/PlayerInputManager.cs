@@ -16,11 +16,15 @@ public class PlayerInputManager : MonoBehaviour
 
     protected InputAction m_run;
 
+    protected InputAction m_look;
+
     protected Camera m_camera;
 
     protected float? m_lastJumpTime;
 
     protected const float k_jumpBuffer = 0.15f;
+
+    protected const string k_mouseDeviceName = "Mouse";
 
     protected virtual void Awake() => CacheActions();
     protected virtual void CacheActions()
@@ -28,6 +32,7 @@ public class PlayerInputManager : MonoBehaviour
         m_movement = actions["Movement"];
         m_run = actions["Run"];
         m_jump = actions["Jump"];
+        m_look = actions["Look"];
     }
     // Start is called before the first frame update
     void Start()
@@ -105,4 +110,24 @@ public class PlayerInputManager : MonoBehaviour
     public virtual bool GetRun() => m_run.IsPressed();
 
     public virtual bool GetJumpUp() => m_jump.WasReleasedThisFrame();
+
+    public virtual bool IsLookingWithMouse()
+    {
+        if(m_look.activeControl == null)
+        {
+            return false;
+        }
+        return m_look.activeControl.device.name.Equals(k_mouseDeviceName);
+    }
+
+    public virtual Vector3 GetLookDirection()
+    {
+        var value = m_look.ReadValue<Vector2>();
+        if(IsLookingWithMouse())
+        {
+            return new Vector3(value.x, 0, value.y);
+        }
+
+        return GetAxisWithCrossDeadZone(value);
+    }
 }
