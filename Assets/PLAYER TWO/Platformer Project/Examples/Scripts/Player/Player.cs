@@ -21,6 +21,11 @@ public class Player : Entity<Player>
         base.Awake();
         initializeInputs();
         initializeStats();
+        
+        entityEvents.onGroundEnter.AddListener(()=>
+        {
+            ResetJumps();
+        });
     }
 
     public virtual void Accelerate(Vector3 direction)
@@ -74,6 +79,12 @@ public class Player : Entity<Player>
         Decelerate(stats.current.friction);
    }
 
+    public virtual void AccelerateToInputDirection()
+    {
+        var inputDirection = inputs.GetMovementCamerDirection();
+        Accelerate(inputDirection);
+    }
+
    public virtual void Gravity()
    {
         if(!isGrounded && verticalVelocity.y > -stats.current.gravityTopSpeed)
@@ -86,6 +97,10 @@ public class Player : Entity<Player>
         }
    }
 
+   public virtual void SnapToGround() => SnapToGround(stats.current.snapForce);
+   
+   public virtual void ResetJumps()=> jumpCounter=0;
+
     public virtual void Fall()
     {
         if(!isGrounded)
@@ -96,9 +111,12 @@ public class Player : Entity<Player>
 
     public virtual void Jump()
     {
+        //是否能多段跳
         var canMultiJump = (jumpCounter > 0) && (jumpCounter < stats.current.multiJumps);
+        //土狼跳（落地一小段时间内仍然可跳）
         var canCoyoteJump = (jumpCounter == 0) && (Time.time < lastGroundTime + stats.current.coyoteJumpThreshold);
 
+        //在地面/多段跳/土狼跳的条件满足时才可以跳
         if(isGrounded || canMultiJump || canCoyoteJump) 
         {
             if(inputs.GetJumpDown())
@@ -106,7 +124,7 @@ public class Player : Entity<Player>
                 Jump(stats.current.maxJumpHeight);
             }
         }
-
+        //松开跳跃键时，如果还在上升，限制为最小跳跃高度（实现“按得短跳的低”的效果），早松手早限制
         if(inputs.GetJumpUp() && jumpCounter >0 && verticalVelocity.y > stats.current.miniJumpHeight)
         {
             verticalVelocity = Vector3.up * stats.current.miniJumpHeight;

@@ -14,6 +14,7 @@ public class IdelPlayerState : PlayerState
     protected override void OnStep(Player player)
     {
         player.Gravity();
+        player.SnapToGround();
         player.Jump();
         player.Fall();
         player.Friction();

@@ -29,6 +29,10 @@ public class Entity : MonoBehaviour
     public Vector3 unsizePosition => position - height * transform.up * 0.5f + originalHeight * transform.up *0.5f;
 
     public RaycastHit groundHit { get; protected set; }
+    
+    public Vector3 groundNormal { get; protected set; }
+    public float groundAngle{ get; protected set; }
+    public Vector3 localSlopeDirection{ get; protected set; }
 
     public Vector3 lateralVelocity
     {
@@ -68,7 +72,9 @@ public class Entity : MonoBehaviour
         ,int layer=Physics.DefaultRaycastLayers
         ,QueryTriggerInteraction queryTriggerInteraction=QueryTriggerInteraction.Ignore)
     {
+        //计算球形检测的有效距离，确保球形检测的范围符合预期
         var castDistance = Mathf.Abs(distance - radius);
+        //使用物理引擎进行球形碰撞检测
         return Physics.SphereCast(position, radius, direction,out hit, castDistance, layer, queryTriggerInteraction);
     }
 
@@ -80,6 +86,7 @@ public class Entity<T> : Entity where T : Entity<T>
 {
     public EntityStateManager<T> states {  get; private set; }
     protected void HandleStates() => states.Step();
+    
     protected virtual void InitializeStateManager() => states= GetComponent<EntityStateManager<T>>();
 
     protected virtual void InitializeController()
@@ -90,8 +97,9 @@ public class Entity<T> : Entity where T : Entity<T>
         {
             controller = gameObject.AddComponent<CharacterController>();
         }
-
+        //碰撞器表面到实际碰撞检测边界的距离（防止卡住用的小偏移）
         controller.skinWidth = 0.005f;
+        //最小移动距离（0表示如果非常小的移动也会被检测到）
         controller.minMoveDistance = 0;
         originalHeight = controller.height;
     }
@@ -114,15 +122,23 @@ public class Entity<T> : Entity where T : Entity<T>
 
     protected virtual void HandleGround()
     {
+        //角色的一半身高+地面检测的额外偏移量
         var distance = (height * 0.5f) + m_groundOffset;
+        //向下发射球体射线检测地面，并且角色的垂直速度<=0(下落或静止状态)
         if(Spherecast(Vector3.down,distance,out var hit) && velocity.y <= 0)
         {
+            //如果之前不在地面
             if(!isGrounded)
             {
+                //是否满足落地条件
                 if(EvaluateLanding(hit))
                 {
                     EnterGround(hit);
                     
+                }//已经在地面的状态
+                else if (isPointUnderStep(hit.point))
+                {
+                    UpdateGround(hit);
                 }
                 else
                 {
@@ -154,9 +170,28 @@ public class Entity<T> : Entity where T : Entity<T>
     {
         if(!isGrounded)
         {
+            //记录当前地面的射线检测信息（位置、法线等）
             groundHit = hit;
+            //标记为在地面上
             isGrounded = true;
             entityEvents.onGroundEnter?.Invoke();
+        }
+    }
+
+    
+    protected virtual void UpdateGround(RaycastHit hit)
+    {
+        if (isGrounded)
+        {
+            groundHit = hit;
+            //记录地面法线（用于计算坡度方向）
+            groundNormal=groundHit.normal;
+            //计算当前地面的坡度角（与Y的夹角）
+            groundAngle=Vector3.Angle(Vector3.up,groundHit.normal);
+            //计算本地的坡度方向（水平投影后的法线方向）
+            localSlopeDirection=new Vector3(groundNormal.x,0, groundNormal.z).normalized;
+            //如果地面是平台（tag=platform），让角色成为平台的子物体，跟随平台移动，否则取消父子关系
+            transform.parent = hit.collider.CompareTag(GameTags.Platform) ? hit.transform : null;
         }
     }
 
@@ -172,8 +207,15 @@ public class Entity<T> : Entity where T : Entity<T>
         }
     }
 
+    public virtual void SnapToGround(float force)
+    {
+        if(isGrounded &&(verticalVelocity.y<=0))
+            verticalVelocity=Vector3.down *force;
+    }
+
     protected virtual bool EvaluateLanding(RaycastHit hit)
     {
+        //slopeLimit是坡度的最大限制角度
         return isPointUnderStep(hit.point) && Vector3.Angle(hit.normal,Vector3.up) < controller.slopeLimit;
     }
 

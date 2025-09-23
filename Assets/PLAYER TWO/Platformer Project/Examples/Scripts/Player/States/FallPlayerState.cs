@@ -16,7 +16,11 @@ public class FallPlayerState : PlayerState
     protected override void OnStep(Player player)
     {
         player.Gravity();
+        player.SnapToGround();
+        //平滑转向（使角色朝向移动方向）
         player.FaceDirectionSmooth(player.lateralVelocity);
+        player.AccelerateToInputDirection();
+        player.Jump();
         if(player.isGrounded)
         {
             player.states.Change<IdelPlayerState>();
