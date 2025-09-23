@@ -26,5 +26,7 @@ public class FallPlayerState : PlayerState
             player.states.Change<IdelPlayerState>();
         }
     }
+
+    public override void OnContact(Player entity, Collider other) { }
 }
 

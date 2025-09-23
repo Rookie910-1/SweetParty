@@ -9,18 +9,28 @@ public class Player : Entity<Player>
     public PlayerStatusManager stats { get; protected set; }
 
     public int jumpCounter { get; protected set; }
+    
+    public bool onWater { get; protected set; }
+    
+    public Health health { get; protected set; }
 
     public bool holding { get; protected set; }
 
     protected virtual void initializeInputs() => inputs = GetComponent<PlayerInputManager>();
 
     protected virtual void initializeStats() => stats = GetComponent<PlayerStatusManager>();
+    
+    protected virtual void initializeHealth() => health = GetComponent<Health>();
+    
+    protected virtual void initializeTag()=>tag=GameTags.Player;
 
     protected override void Awake()
     {
         base.Awake();
         initializeInputs();
         initializeStats();
+        initializeHealth();
+        initializeTag();
         
         entityEvents.onGroundEnter.AddListener(()=>
         {
@@ -98,7 +108,35 @@ public class Player : Entity<Player>
    }
 
    public virtual void SnapToGround() => SnapToGround(stats.current.snapForce);
-   
+
+   public override void ApplyDamage(int amount, Vector3 origin)
+   {
+       if (!health.isEmpty && !health.recovering)
+       {
+           health.Damage(amount);
+           var damageDir = origin - transform.position;
+           damageDir.y = 0;
+           damageDir = damageDir.normalized;
+           FaceDirection(damageDir);//面向攻击方向
+           //受伤后向后退
+           lateralVelocity = -transform.forward * stats.current.hurtBackwardsForce;
+           //不在水中，则会被击飞向上进入受击状态
+           if (!onWater)
+           {
+               verticalVelocity = Vector3.up * stats.current.hurtUpwardForce;
+               states.Change<HurtPlayerState>();
+           }
+
+           playerEvents.OnHurt?.Invoke();
+
+           /*if (health.isEmpty)
+           {
+               Throw();
+               playerEvents.OnDie?.Invoke();
+           }*/
+       }
+   }
+    
    public virtual void ResetJumps()=> jumpCounter=0;
 
     public virtual void Fall()

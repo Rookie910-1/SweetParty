@@ -45,5 +45,7 @@ public class WalkPlayerState : PlayerState
             }
         }
     }
+
+    public override void OnContact(Player entity, Collider other) { }
 }
 

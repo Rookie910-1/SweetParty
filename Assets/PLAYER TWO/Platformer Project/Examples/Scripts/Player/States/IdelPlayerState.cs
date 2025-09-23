@@ -1,4 +1,6 @@
 ﻿
+using UnityEngine;
+
 public class IdelPlayerState : PlayerState
 {
     protected override void OnEnter(Player player)
@@ -25,5 +27,10 @@ public class IdelPlayerState : PlayerState
         {
             player.states.Change<WalkPlayerState>();
         }
+    }
+
+    public override void OnContact(Player entity, Collider other)
+    {
+        
     }
 }

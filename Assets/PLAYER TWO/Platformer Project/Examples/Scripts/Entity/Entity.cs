@@ -4,6 +4,8 @@ using UnityEngine.UIElements;
 public class Entity : MonoBehaviour
 {
     public EntityEvents entityEvents;
+    
+    protected Collider[] m_contactBuffer = new Collider[10];
     public bool isGrounded { get; protected set; } = true;
 
     public Vector3 velocity { get; set; }
@@ -77,10 +79,22 @@ public class Entity : MonoBehaviour
         //使用物理引擎进行球形碰撞检测
         return Physics.SphereCast(position, radius, direction,out hit, castDistance, layer, queryTriggerInteraction);
     }
+    
+    public virtual int OverlapEntity(Collider[] result, float skinOffset = 0)
+    {
+        var contactOffset = skinOffset + controller.skinWidth + Physics.defaultContactOffset;
+        var overlapsRadius = radius + contactOffset;
+        var offset = (height + contactOffset) * 0.5f - overlapsRadius;
+        var top = position + Vector3.up * offset;
+        var bottom = position + Vector3.down * offset;
+        return Physics.OverlapCapsuleNonAlloc(top, bottom, overlapsRadius, result);
+    }
 
     public Vector3 stepPosition => position - transform.up * (height * 0.5f - controller.stepOffset);
 
     public virtual bool isPointUnderStep(Vector3 point) => stepPosition.y >point.y;
+    
+    public virtual void ApplyDamage(int damage, Vector3 origin) { }
 }
 public class Entity<T> : Entity where T : Entity<T>
 {
@@ -117,6 +131,7 @@ public class Entity<T> : Entity where T : Entity<T>
             HandleStates();
             HandleController();
             HandleGround();
+            HandleContacts();
         }
     }
 
@@ -149,6 +164,31 @@ public class Entity<T> : Entity where T : Entity<T>
         else
         {
             ExitGround();
+        }
+    }
+    
+    protected virtual void HandleContacts()
+    {
+        var overlaps = OverlapEntity(m_contactBuffer);
+
+        for (int i = 0; i < overlaps; i++)
+        {
+            if (!m_contactBuffer[i].isTrigger && m_contactBuffer[i].transform != transform)
+            {
+                OnContact(m_contactBuffer[i]);
+
+                var listeners = m_contactBuffer[i].GetComponents<IEntityContact>();
+
+                foreach (var contact in listeners)
+                {
+                    contact.OnEntityContact((T)this);
+                }
+
+                if (m_contactBuffer[i].bounds.min.y > controller.bounds.max.y)
+                {
+                    verticalVelocity = Vector3.Min(verticalVelocity, Vector3.zero);
+                }
+            }
         }
     }
 
@@ -218,6 +258,14 @@ public class Entity<T> : Entity where T : Entity<T>
         //slopeLimit是坡度的最大限制角度
         return isPointUnderStep(hit.point) && Vector3.Angle(hit.normal,Vector3.up) < controller.slopeLimit;
     }
+    
+    protected virtual void OnContact(Collider other)
+    {
+        if (other)
+        {
+            states.OnContact(other);
+        }
+    }
 
     public virtual void Accelerate(Vector3 direction, float turningDrag, float acceleration, float topSpeed)
     {
@@ -249,6 +297,16 @@ public class Entity<T> : Entity where T : Entity<T>
             var rotationDelta= degressPerSpeed * Time.deltaTime;
             var target = Quaternion.LookRotation(direction, Vector3.up);
             transform.rotation =Quaternion.RotateTowards(rotation, target, rotationDelta);
+        }
+    }
+
+    public virtual void FaceDirection(Vector3 direction)
+    {
+        if (direction.sqrMagnitude > 0)
+        {
+            var rotation = Quaternion.LookRotation(direction, Vector3.up);
+
+            transform.rotation = rotation;
         }
     }
 

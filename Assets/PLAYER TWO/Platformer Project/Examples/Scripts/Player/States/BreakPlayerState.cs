@@ -44,5 +44,7 @@ public class BreakPlayerState : PlayerState
         }
 
     }
+
+    public override void OnContact(Player entity, Collider other) { }
 }
 
