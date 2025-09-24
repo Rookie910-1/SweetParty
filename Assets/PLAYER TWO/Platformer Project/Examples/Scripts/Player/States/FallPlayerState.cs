@@ -21,6 +21,7 @@ public class FallPlayerState : PlayerState
         player.FaceDirectionSmooth(player.lateralVelocity);
         player.AccelerateToInputDirection();
         player.Jump();
+        player.Spin();
         player.StompAttack();
         player.Dash();
         

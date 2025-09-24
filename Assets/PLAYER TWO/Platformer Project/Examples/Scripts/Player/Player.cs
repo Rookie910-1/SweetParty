@@ -12,6 +12,8 @@ public class Player : Entity<Player>
     
     public int airDashCounter  { get; protected set; }
     
+    public int airSpinCounter  {get; protected set;}
+    
     public float lastDashTime { get; protected set; }
     
     public bool onWater { get; protected set; }
@@ -40,6 +42,7 @@ public class Player : Entity<Player>
         {
             ResetJumps();
             ResetAirDash();
+            ResetAirSpin();
         });
     }
 
@@ -118,6 +121,8 @@ public class Player : Entity<Player>
    }
    
    public virtual void ResetAirDash()=> airDashCounter = 0;
+   
+   public virtual void ResetAirSpin()=> airSpinCounter = 0;
 
    public virtual void Dash()
    {
@@ -139,6 +144,20 @@ public class Player : Entity<Player>
        if (!isGrounded && !holding && stats.current.canStompAttack && inputs.GetStompDown())
        {
            states.Change<StompPlayerState>();
+       }
+   }
+
+   public virtual void Spin()
+   {
+       var canAirSpin=(isGrounded || stats.current.canAirSpin) && airSpinCounter < stats.current.allowedAirSpins;
+
+       if (stats.current.canSpin && canAirSpin && !holding && inputs.GetSpinDown())
+       {
+           if (!isGrounded)
+               airDashCounter++;
+           
+           states.Change<SpinPlayerState>();
+           playerEvents.OnSpin?.Invoke();
        }
    }
 

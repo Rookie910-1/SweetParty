@@ -19,6 +19,7 @@ public class IdelPlayerState : PlayerState
         player.SnapToGround();
         player.Jump();
         player.Fall();
+        player.Spin();
         player.Friction();
 
         var inputDirection = player.inputs.GetMovementDirection();

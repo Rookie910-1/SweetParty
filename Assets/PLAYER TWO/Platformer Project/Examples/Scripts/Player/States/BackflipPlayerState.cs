@@ -30,6 +30,7 @@ public class BackflipPlayerState : PlayerState
         }
         else if(player.verticalVelocity.y<0)
         {
+            player.Spin();
             player.StompAttack();
         }
     }
