@@ -142,7 +142,7 @@ public class Entity<T> : Entity where T : Entity<T>
 
     protected virtual void Update()
     {
-        if (controller.enabled)
+        if (controller.enabled )
         {
             HandleStates();
             HandleController();
@@ -156,7 +156,7 @@ public class Entity<T> : Entity where T : Entity<T>
         //角色的一半身高+地面检测的额外偏移量
         var distance = (height * 0.5f) + m_groundOffset;
         //向下发射球体射线检测地面，并且角色的垂直速度<=0(下落或静止状态)
-        if(Spherecast(Vector3.down,distance,out var hit) && velocity.y <= 0)
+        if(Spherecast(Vector3.down,distance,out var hit) && verticalVelocity.y <= 0)
         {
             //如果之前不在地面
             if(!isGrounded)
@@ -170,6 +170,11 @@ public class Entity<T> : Entity where T : Entity<T>
                 else if (isPointUnderStep(hit.point))
                 {
                     UpdateGround(hit);
+                    
+                    if (Vector3.Angle(hit.normal, Vector3.up) >= controller.slopeLimit)
+                    {
+                       // HandleSlopeLimit(hit);
+                    }
                 }
                 else
                 {
@@ -213,6 +218,7 @@ public class Entity<T> : Entity where T : Entity<T>
         if(controller.enabled)
         {
             controller.Move(velocity * Time.deltaTime);
+            return;
         }
         transform.position += velocity * Time.deltaTime;
     }

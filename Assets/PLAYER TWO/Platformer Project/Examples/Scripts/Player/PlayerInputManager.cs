@@ -125,6 +125,11 @@ public class PlayerInputManager : MonoBehaviour
         return m_look.activeControl.device.name.Equals(k_mouseDeviceName);
     }
 
+    public virtual void LockMovementDirection(float duration = 0.25f)
+    {
+        m_movementDirectionUnlockTime = Time.time + duration;
+    }
+
     public virtual Vector3 GetLookDirection()
     {
         var value = m_look.ReadValue<Vector2>();

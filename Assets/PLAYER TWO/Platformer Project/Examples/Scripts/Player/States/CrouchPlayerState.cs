@@ -28,13 +28,19 @@ public class CrouchPlayerState : PlayerState
             if (inputDirection.sqrMagnitude > 0 && !player.holding)
             {
                 //爬行
-                player.states.Change<CrawlingPlayerState>();
+                var speedMagnitude = player.lateralVelocity.sqrMagnitude;
+
+                if (player.lateralVelocity.sqrMagnitude == 0)
+                {
+                    player.states.Change<CrawlingPlayerState>();
+                }
+            }
+            else if(player.inputs.GetJumpDown())
+            {
+                player.Backflip(player.stats.current.backflipBackwardForce);
             }
         }//玩家下蹲时按下跳跃键->后空翻执行
-        else if(player.inputs.GetJumpDown())
-        {
-            
-        }
+        
         else
         {
             player.states.Change<IdelPlayerState>();

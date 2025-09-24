@@ -76,8 +76,8 @@ public class Player : Entity<Player>
     {
         if(stats.current.canBackflip)
         {
-            verticalVelocity=Vector3.up * stats.current.backflipJumpHeight;
-            lateralVelocity = -transform.forward * force;
+            verticalVelocity=Vector3.up * stats.current.backflipJumpHeight;//上跳力
+            lateralVelocity = -transform.forward * force;//向后推力
             states.Change<BackflipPlayerState>();
             playerEvents?.OnBackflip?.Invoke();
         }
@@ -145,6 +145,8 @@ public class Player : Entity<Player>
    public virtual bool canStandUp => !Spherecast(Vector3.up, originalHeight);
     
    public virtual void ResetJumps()=> jumpCounter=0;
+
+   public virtual void SetJumps(int times) => jumpCounter = times;
 
     public virtual void Fall()
     {
