@@ -10,6 +10,10 @@ public class Player : Entity<Player>
 
     public int jumpCounter { get; protected set; }
     
+    public int airDashCounter  { get; protected set; }
+    
+    public float lastDashTime { get; protected set; }
+    
     public bool onWater { get; protected set; }
     
     public Health health { get; protected set; }
@@ -35,6 +39,7 @@ public class Player : Entity<Player>
         entityEvents.onGroundEnter.AddListener(()=>
         {
             ResetJumps();
+            ResetAirDash();
         });
     }
 
@@ -110,6 +115,23 @@ public class Player : Entity<Player>
             speed = Mathf.Max(speed, -stats.current.gravityTopSpeed);
             verticalVelocity = new Vector3(0, speed, 0);
         }
+   }
+   
+   public virtual void ResetAirDash()=> airDashCounter = 0;
+
+   public virtual void Dash()
+   {
+       var canAirDash = stats.current.canAirDash && !isGrounded && 
+                        airDashCounter < stats.current.allowedAirDashes;
+       var canGroundDash = stats.current.canGroundDash && isGrounded &&
+                           Time.time - lastDashTime > stats.current.groundDashCoolDown;
+
+       if (inputs.GetDashDown() && (canAirDash || canGroundDash))
+       {
+           if (!isGrounded) airDashCounter++;
+           lastDashTime=Time.time;
+           states.Change<DashPlayerState>();
+       }
    }
 
    public virtual void SnapToGround() => SnapToGround(stats.current.snapForce);
