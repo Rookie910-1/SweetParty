@@ -79,6 +79,12 @@ public class Entity : MonoBehaviour
         //使用物理引擎进行球形碰撞检测
         return Physics.SphereCast(position, radius, direction,out hit, castDistance, layer, queryTriggerInteraction);
     }
+
+    public virtual bool Spherecast(Vector3 direction, float distance, int layer = Physics.DefaultRaycastLayers,
+        QueryTriggerInteraction queryTriggerInteraction=QueryTriggerInteraction.Ignore)
+    {
+        return Spherecast(direction, distance, out _, layer, queryTriggerInteraction);
+    }
     
     public virtual int OverlapEntity(Collider[] result, float skinOffset = 0)
     {
@@ -95,6 +101,16 @@ public class Entity : MonoBehaviour
     public virtual bool isPointUnderStep(Vector3 point) => stepPosition.y >point.y;
     
     public virtual void ApplyDamage(int damage, Vector3 origin) { }
+
+    public virtual void ResizeCollider(float height)
+    {
+        //计算高度差
+        var delta = height - this.height;
+        //修改角色控制器的高度
+        controller.height = height;
+        //调整角色控制器的中心位置，随着高度变化自动平移
+        controller.center+=Vector3.up * (delta * 0.5f);
+    }
 }
 public class Entity<T> : Entity where T : Entity<T>
 {

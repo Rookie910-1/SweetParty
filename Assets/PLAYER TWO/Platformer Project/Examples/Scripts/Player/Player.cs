@@ -57,6 +57,11 @@ public class Player : Entity<Player>
         Accelerate(direction.normalized, turningDrag, finalAcceleration, topSpeed);
     }
 
+    public virtual void CrawlingAccelerate(Vector3 direction)
+    {
+        Accelerate(direction,stats.current.crawlingTurningSpeed,stats.current.crawlingAcceleration,stats.current.crawlingTopSpeed);
+    }
+
     public virtual void FaceDirectionSmooth(Vector3 direction)
     {
         FaceDirection(direction, stats.current.rotationSpeed);
@@ -136,6 +141,8 @@ public class Player : Entity<Player>
            }*/
        }
    }
+
+   public virtual bool canStandUp => !Spherecast(Vector3.up, originalHeight);
     
    public virtual void ResetJumps()=> jumpCounter=0;
 

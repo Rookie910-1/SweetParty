@@ -44,6 +44,11 @@ public class WalkPlayerState : PlayerState
                 player.states.Change<IdelPlayerState>();
             }
         }
+
+        if (player.inputs.GetCrouchAndCraw())
+        {
+            player.states.Change<CrouchPlayerState>();
+        }
     }
 
     public override void OnContact(Player entity, Collider other) { }

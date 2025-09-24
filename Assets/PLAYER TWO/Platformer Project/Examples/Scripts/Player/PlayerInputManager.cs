@@ -17,6 +17,8 @@ public class PlayerInputManager : MonoBehaviour
     protected InputAction m_run;
 
     protected InputAction m_look;
+    
+    protected InputAction m_crouch;
 
     protected Camera m_camera;
 
@@ -33,6 +35,7 @@ public class PlayerInputManager : MonoBehaviour
         m_run = actions["Run"];
         m_jump = actions["Jump"];
         m_look = actions["Look"];
+        m_crouch=actions["Crouch"];
     }
     // Start is called before the first frame update
     void Start()
@@ -110,6 +113,8 @@ public class PlayerInputManager : MonoBehaviour
     public virtual bool GetRun() => m_run.IsPressed();
 
     public virtual bool GetJumpUp() => m_jump.WasReleasedThisFrame();
+    
+    public virtual bool GetCrouchAndCraw() => m_crouch.IsPressed();
 
     public virtual bool IsLookingWithMouse()
     {
