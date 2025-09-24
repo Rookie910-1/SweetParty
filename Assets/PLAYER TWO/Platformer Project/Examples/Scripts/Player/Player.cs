@@ -134,6 +134,14 @@ public class Player : Entity<Player>
        }
    }
 
+   public virtual void StompAttack()
+   {
+       if (!isGrounded && !holding && stats.current.canStompAttack && inputs.GetStompDown())
+       {
+           states.Change<StompPlayerState>();
+       }
+   }
+
    public virtual void SnapToGround() => SnapToGround(stats.current.snapForce);
 
    public override void ApplyDamage(int amount, Vector3 origin)

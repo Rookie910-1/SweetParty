@@ -22,6 +22,8 @@ public class PlayerInputManager : MonoBehaviour
 
     protected InputAction m_dash;
 
+    protected InputAction m_stomp;
+
     protected Camera m_camera;
 
     protected float? m_lastJumpTime;
@@ -39,6 +41,7 @@ public class PlayerInputManager : MonoBehaviour
         m_look = actions["Look"];
         m_crouch=actions["Crouch"];
         m_dash=actions["Dash"];
+        m_stomp = actions["Stomp"];
     }
     // Start is called before the first frame update
     void Start()
@@ -119,9 +122,10 @@ public class PlayerInputManager : MonoBehaviour
 
     public virtual bool GetJumpUp() => m_jump.WasReleasedThisFrame();
 
-    public virtual bool GetDashDown() => m_dash.WasReleasedThisFrame();
+    public virtual bool GetDashDown() => m_dash.WasPressedThisFrame();
     
     public virtual bool GetCrouchAndCraw() => m_crouch.IsPressed();
+    public virtual bool GetStompDown() => m_stomp.WasPressedThisFrame();
 
     public virtual bool IsLookingWithMouse()
     {

@@ -1,6 +1,7 @@
 ﻿
 using System;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class PlayerEvents
@@ -13,8 +14,10 @@ public class PlayerEvents
     public UnityEvent OnPickUp;
     public UnityEvent OnThrow;
     public UnityEvent OnStopStarted;
-    public UnityEvent OnStopFalling;
-    public UnityEvent OnStopLanding;
+    public UnityEvent OnStompFalling;
+    public UnityEvent OnStompLanding;
+    public UnityEvent OnStompStarted;
+    public UnityEvent OnStompEnding;
     public UnityEvent OnledgeGrabbed;  
     public UnityEvent OnledgeClimbing;
     public UnityEvent OnAirDive;

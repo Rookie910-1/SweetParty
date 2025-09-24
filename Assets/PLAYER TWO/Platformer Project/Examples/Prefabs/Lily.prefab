@@ -101,10 +101,16 @@ MonoBehaviour:
     OnStopStarted:
       m_PersistentCalls:
         m_Calls: []
-    OnStopFalling:
+    OnStompFalling:
       m_PersistentCalls:
         m_Calls: []
-    OnStopLanding:
+    OnStompLanding:
+      m_PersistentCalls:
+        m_Calls: []
+    OnStompStarted:
+      m_PersistentCalls:
+        m_Calls: []
+    OnStompEnding:
       m_PersistentCalls:
         m_Calls: []
     OnledgeGrabbed:
@@ -167,12 +173,13 @@ MonoBehaviour:
   - CrawlingPlayerState
   - CrawlingPlayerState
   - CrawlingPlayerState
-  - CrawlingPlayerState
+  - StompPlayerState
   - CrawlingPlayerState
   - CrawlingPlayerState
   - BackflipPlayerState
   - BackflipPlayerState
   - DashPlayerState
+  - IdelPlayerState
 --- !u!114 &6500228138498905214
 MonoBehaviour:
   m_ObjectHideFlags: 0
