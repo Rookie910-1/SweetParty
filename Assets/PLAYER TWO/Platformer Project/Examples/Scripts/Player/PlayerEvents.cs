@@ -18,8 +18,8 @@ public class PlayerEvents
     public UnityEvent OnStompLanding;
     public UnityEvent OnStompStarted;
     public UnityEvent OnStompEnding;
-    public UnityEvent OnledgeGrabbed;  
-    public UnityEvent OnledgeClimbing;
+    public UnityEvent OnLedgeGrabbed;  
+    public UnityEvent OnLedgeClimbing;
     public UnityEvent OnAirDive;
     public UnityEvent OnBackflip;
     public UnityEvent OnGlidingStop;    
