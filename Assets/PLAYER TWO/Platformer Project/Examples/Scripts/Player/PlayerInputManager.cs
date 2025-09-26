@@ -26,6 +26,8 @@ public class PlayerInputManager : MonoBehaviour
 
     protected InputAction m_spin;
 
+    protected InputAction m_airDive;
+
     protected Camera m_camera;
 
     protected float? m_lastJumpTime;
@@ -45,6 +47,7 @@ public class PlayerInputManager : MonoBehaviour
         m_dash=actions["Dash"];
         m_stomp = actions["Stomp"];
         m_spin = actions["Spin"];
+        m_airDive=actions["AirDive"];
     }
     // Start is called before the first frame update
     void Start()
@@ -131,6 +134,8 @@ public class PlayerInputManager : MonoBehaviour
     public virtual bool GetStompDown() => m_stomp.WasPressedThisFrame();
     
     public virtual bool GetSpinDown() => m_spin.WasPressedThisFrame();
+
+    public virtual bool GetAirDiveDown() => m_airDive.WasPressedThisFrame();
 
     public virtual bool IsLookingWithMouse()
     {

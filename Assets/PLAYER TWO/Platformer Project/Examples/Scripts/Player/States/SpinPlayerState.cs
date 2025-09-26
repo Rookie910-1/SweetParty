@@ -24,6 +24,7 @@ public class SpinPlayerState : PlayerState
     {
         player.Gravity();
         player.SnapToGround();
+        player.AirDive();
         player.StompAttack();
         player.AccelerateToInputDirection();
 

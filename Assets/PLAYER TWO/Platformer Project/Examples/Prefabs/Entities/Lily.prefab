@@ -384,7 +384,7 @@ MonoBehaviour:
   - CrouchPlayerState
   - CrawlingPlayerState
   - SpinPlayerState
-  - CrawlingPlayerState
+  - AirDivePlayerState
   - StompPlayerState
   - CrawlingPlayerState
   - CrawlingPlayerState

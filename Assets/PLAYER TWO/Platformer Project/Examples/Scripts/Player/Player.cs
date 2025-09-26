@@ -161,6 +161,15 @@ public class Player : Entity<Player>
        }
    }
 
+   public virtual void AirDive()
+   {
+       if (stats.current.canAirDive && !isGrounded && !holding && inputs.GetAirDiveDown())
+       {
+           states.Change<AirDivePlayerState>();
+           playerEvents.OnAirDive?.Invoke();
+       }
+   }
+
    public virtual void SnapToGround() => SnapToGround(stats.current.snapForce);
 
    public override void ApplyDamage(int amount, Vector3 origin)
