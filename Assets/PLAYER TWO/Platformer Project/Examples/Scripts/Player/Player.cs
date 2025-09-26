@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 public class Player : Entity<Player>
 {
@@ -21,6 +22,10 @@ public class Player : Entity<Player>
     public Health health { get; protected set; }
 
     public bool holding { get; protected set; }
+
+    protected const float k_waterExitOffset = 0.25f;
+    
+    public Collider water { get; protected set; }
 
     protected virtual void initializeInputs() => inputs = GetComponent<PlayerInputManager>();
 
@@ -65,10 +70,17 @@ public class Player : Entity<Player>
         Accelerate(direction.normalized, turningDrag, finalAcceleration, topSpeed);
     }
 
+    public virtual void WaterAcceleration(Vector3 direction) =>
+        Accelerate(direction, stats.current.waterTurningDrag, stats.current.swimAcceleration, stats.current.swimTopSpeed);
+    
+    
+    
     public virtual void CrawlingAccelerate(Vector3 direction)
     {
         Accelerate(direction,stats.current.crawlingTurningSpeed,stats.current.crawlingAcceleration,stats.current.crawlingTopSpeed);
     }
+    
+    public virtual void WaterFaceDirection(Vector3 direction) => FaceDirection(direction, stats.current.waterRotationSpeed);
 
     public virtual void FaceDirectionSmooth(Vector3 direction)
     {
@@ -93,7 +105,7 @@ public class Player : Entity<Player>
 
    public virtual void BackflipAcceleration()
    {
-        var direction = inputs.GetMovementCamerDirection();
+        var direction = inputs.GetMovementCameraDirection();
         Accelerate(direction, stats.current.backflipGravity,stats.current.backflipAirAcceleration, stats.current.backflipTopSpeed);
    }
 
@@ -104,7 +116,7 @@ public class Player : Entity<Player>
 
     public virtual void AccelerateToInputDirection()
     {
-        var inputDirection = inputs.GetMovementCamerDirection();
+        var inputDirection = inputs.GetMovementCameraDirection();
         Accelerate(inputDirection);
     }
 
@@ -242,6 +254,45 @@ public class Player : Entity<Player>
         verticalVelocity=Vector3.up * height;
         states.Change<FallPlayerState>();
         playerEvents.OnJump?.Invoke();
+    }
+
+    public virtual void EnterWater(Collider water)
+    {
+        if (!onWater && !health.isEmpty)
+        {
+            //Throw();//丢掉手上的物品
+            onWater = true;
+            this.water = water;
+            states.Change<SwimPlayerState>();
+        }
+    }
+    
+    public virtual void ExitWater()
+    {
+        if (onWater)
+        {
+            onWater = false;
+        }
+    }
+    
+    protected virtual void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag(GameTags.VolumeWater))
+        {
+            if (!onWater && other.bounds.Contains(unsizePosition))
+            {
+                EnterWater(other);
+            }
+            else if (onWater)
+            {
+                var exitPoint = position + Vector3.down * k_waterExitOffset;
+
+                if (!other.bounds.Contains(exitPoint))
+                {
+                    ExitWater();
+                }
+            }
+        }
     }
 
 }

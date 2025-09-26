@@ -28,6 +28,9 @@ public class Entity : MonoBehaviour
 
     public float originalHeight { get; protected set; }
 
+    /// <summary>
+    /// 忽略碰撞器缩放的实体位置
+    /// </summary>
     public Vector3 unsizePosition => position - height * transform.up * 0.5f + originalHeight * transform.up *0.5f;
 
     public RaycastHit groundHit { get; protected set; }

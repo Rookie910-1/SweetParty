@@ -380,7 +380,7 @@ MonoBehaviour:
   - HurtPlayerState
   - HurtPlayerState
   - HurtPlayerState
-  - HurtPlayerState
+  - SwimPlayerState
   - CrouchPlayerState
   - CrawlingPlayerState
   - SpinPlayerState

@@ -15,7 +15,7 @@ public class BreakPlayerState : PlayerState
 
     protected override void OnStep(Player player)
     {
-        var inputDirection = player.inputs.GetMovementCamerDirection();
+        var inputDirection = player.inputs.GetMovementCameraDirection();
 
         if (player.stats.current.canBackflip && Vector3.Dot(inputDirection, player.transform.forward) < 0 &&
             player.inputs.GetJumpDown())

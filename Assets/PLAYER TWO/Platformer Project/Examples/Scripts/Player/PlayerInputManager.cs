@@ -28,6 +28,8 @@ public class PlayerInputManager : MonoBehaviour
 
     protected InputAction m_airDive;
 
+    protected InputAction m_dive;
+
     protected Camera m_camera;
 
     protected float? m_lastJumpTime;
@@ -48,6 +50,7 @@ public class PlayerInputManager : MonoBehaviour
         m_stomp = actions["Stomp"];
         m_spin = actions["Spin"];
         m_airDive=actions["AirDive"];
+        m_dive=actions["Dive"];
     }
     // Start is called before the first frame update
     void Start()
@@ -96,7 +99,7 @@ public class PlayerInputManager : MonoBehaviour
         return (value - deadZone) / (1 - deadZone); 
     }
 
-    public virtual Vector3 GetMovementCamerDirection()
+    public virtual Vector3 GetMovementCameraDirection()
     {
         var direction=GetMovementDirection();
 
@@ -136,6 +139,8 @@ public class PlayerInputManager : MonoBehaviour
     public virtual bool GetSpinDown() => m_spin.WasPressedThisFrame();
 
     public virtual bool GetAirDiveDown() => m_airDive.WasPressedThisFrame();
+    
+    public virtual bool GetDive() => m_dive.WasPressedThisFrame();
 
     public virtual bool IsLookingWithMouse()
     {

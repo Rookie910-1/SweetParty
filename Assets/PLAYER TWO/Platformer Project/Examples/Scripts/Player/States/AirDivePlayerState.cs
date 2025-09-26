@@ -32,7 +32,7 @@ public class AirDivePlayerState :PlayerState
 
         if (player.isGrounded)//落地处理
         {
-            var inputDirection = player.inputs.GetMovementCamerDirection();
+            var inputDirection = player.inputs.GetMovementCameraDirection();
             
             var localInputDirection = player.transform.InverseTransformDirection(inputDirection);
             var rotation = localInputDirection.x
