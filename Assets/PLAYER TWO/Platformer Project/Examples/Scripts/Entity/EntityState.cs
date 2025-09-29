@@ -13,6 +13,7 @@ public abstract class EntityState<T> where T : Entity<T>
     {
         timeSinceEntered = 0;
         onEnter?.Invoke();
+        OnEnter(entity);
     }
     
     public void Exit(T entity)

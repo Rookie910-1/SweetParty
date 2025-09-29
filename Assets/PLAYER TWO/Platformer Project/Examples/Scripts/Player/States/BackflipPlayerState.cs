@@ -33,6 +33,7 @@ public class BackflipPlayerState : PlayerState
             player.Spin();
             player.StompAttack();
             player.AirDive();
+            player.Glide();
         }
     }
 

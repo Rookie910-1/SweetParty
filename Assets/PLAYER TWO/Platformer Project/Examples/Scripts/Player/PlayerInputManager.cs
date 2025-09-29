@@ -30,6 +30,8 @@ public class PlayerInputManager : MonoBehaviour
 
     protected InputAction m_dive;
 
+    protected InputAction m_glide;
+
     protected Camera m_camera;
 
     protected float? m_lastJumpTime;
@@ -51,6 +53,7 @@ public class PlayerInputManager : MonoBehaviour
         m_spin = actions["Spin"];
         m_airDive=actions["AirDive"];
         m_dive=actions["Dive"];
+        m_glide=actions["Glide"];
     }
     // Start is called before the first frame update
     void Start()
@@ -141,6 +144,8 @@ public class PlayerInputManager : MonoBehaviour
     public virtual bool GetAirDiveDown() => m_airDive.WasPressedThisFrame();
     
     public virtual bool GetDive() => m_dive.WasPressedThisFrame();
+    
+    public virtual bool GetGlide() => m_glide.IsPressed();
 
     public virtual bool IsLookingWithMouse()
     {

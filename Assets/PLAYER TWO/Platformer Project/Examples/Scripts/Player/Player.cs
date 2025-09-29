@@ -274,6 +274,13 @@ public class Player : Entity<Player>
             onWater = false;
         }
     }
+
+    public virtual void Glide()
+    {
+        if(!isGrounded &&inputs.GetGlide() &&
+           verticalVelocity.y<=0 && stats.current.canGlide)
+            states.Change<GlidingPlayerState>();
+    }
     
     protected virtual void OnTriggerStay(Collider other)
     {
