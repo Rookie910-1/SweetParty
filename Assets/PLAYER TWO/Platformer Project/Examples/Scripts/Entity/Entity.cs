@@ -32,6 +32,8 @@ public class Entity : MonoBehaviour
     /// 忽略碰撞器缩放的实体位置
     /// </summary>
     public Vector3 unsizePosition => position - height * transform.up * 0.5f + originalHeight * transform.up *0.5f;
+    
+    public float positionDelta { get; protected set; }
 
     public RaycastHit groundHit { get; protected set; }
     
@@ -72,7 +74,28 @@ public class Entity : MonoBehaviour
     public Vector3 center=>controller.center;
 
     public Vector3 position => transform.position + center;
+    
+    public Vector3 lastPosition { get; set; }
+    
+    
+    public virtual bool CapsuleCast(Vector3 direction, float distance, int layer = Physics.DefaultRaycastLayers,
+        QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Ignore)
+    {
+        return CapsuleCast(direction, distance, out _, layer, queryTriggerInteraction);
+    }
 
+    public virtual bool CapsuleCast(Vector3 direction, float distance,
+        out RaycastHit hit, int layer = Physics.DefaultRaycastLayers,
+        QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Ignore)
+    {
+        var origin = position - direction * radius + center;
+        var offset = transform.up * (height * 0.5f - radius);
+        var top = origin + offset;
+        var bottom = origin - offset;
+        return Physics.CapsuleCast(top, bottom, radius, direction,
+            out hit, distance + radius, layer, queryTriggerInteraction);
+    }
+    
     public virtual bool Spherecast(Vector3 direction,float distance,out RaycastHit hit
         ,int layer=Physics.DefaultRaycastLayers
         ,QueryTriggerInteraction queryTriggerInteraction=QueryTriggerInteraction.Ignore)
@@ -215,6 +238,12 @@ public class Entity<T> : Entity where T : Entity<T>
             }
         }
     }
+    
+    protected virtual void HandlePosition()
+    {
+        positionDelta = (position - lastPosition).magnitude;
+        lastPosition = position;
+    }
 
     protected virtual void HandleController()
     {
@@ -346,6 +375,15 @@ public class Entity<T> : Entity where T : Entity<T>
         if(!isGrounded)
         {
             verticalVelocity += Vector3.down * gravity * gravityMultiplier * Time.deltaTime;
+        }
+    }
+    
+    protected virtual void LateUpdate()
+    {
+        if (controller.enabled)
+        {
+            HandlePosition();
+           // HandlePenetration();
         }
     }
 }

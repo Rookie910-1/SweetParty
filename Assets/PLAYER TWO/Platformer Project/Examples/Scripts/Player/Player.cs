@@ -1,9 +1,17 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
-
+﻿using UnityEngine;
+[RequireComponent(typeof(PlayerInputManager))]
+[RequireComponent(typeof(PlayerStatusManager))]
+[RequireComponent(typeof(PlayerStateManager))]
+[RequireComponent(typeof(Health))]
+[AddComponentMenu("PLAYER TWO/Platformer Project/Player/Player")]
 public class Player : Entity<Player>
 {
     public PlayerEvents playerEvents;
+    
+    public Transform skin;
+    
+    protected Vector3 m_skinInitialPosition;
+    protected Quaternion m_skinInitialRotation;
 
     public PlayerInputManager inputs { get; protected set; }
 
@@ -22,6 +30,8 @@ public class Player : Entity<Player>
     public Health health { get; protected set; }
 
     public bool holding { get; protected set; }
+    
+    public Vector3 lastWallNormal { get; protected set; }
 
     protected const float k_waterExitOffset = 0.25f;
     
@@ -34,6 +44,16 @@ public class Player : Entity<Player>
     protected virtual void initializeHealth() => health = GetComponent<Health>();
     
     protected virtual void initializeTag()=>tag=GameTags.Player;
+    
+    
+    protected virtual void InitializeSkin()
+    {
+        if (skin)
+        {
+            m_skinInitialPosition = skin.localPosition;
+            m_skinInitialRotation = skin.localRotation;
+        }
+    }
 
     protected override void Awake()
     {
@@ -280,6 +300,74 @@ public class Player : Entity<Player>
         if(!isGrounded &&inputs.GetGlide() &&
            verticalVelocity.y<=0 && stats.current.canGlide)
             states.Change<GlidingPlayerState>();
+    }
+    
+    public virtual void SetSkinParent(Transform parent)
+    {
+        if (skin)
+        {
+            skin.parent = parent;
+        }
+    }
+    
+    public virtual void ResetSkinParent()
+    {
+        if (skin)
+        {
+            skin.parent = transform;
+            skin.localPosition = m_skinInitialPosition;
+            skin.localRotation = m_skinInitialRotation;
+        }
+    }
+
+    public virtual void WallDrag(Collider other)
+    {
+        if (stats.current.canWallDrag && velocity.y <= 0 && !holding &&
+            !other.TryGetComponent<Rigidbody>(out _))
+        {
+            if (CapsuleCast(transform.forward, 0.25f, out var hit,
+                    stats.current.wallDragLayers) && !DetectingLedge(0.25f, height, out _))
+            {
+                if (hit.collider.CompareTag(GameTags.Platform))
+                    transform.parent = hit.transform;
+
+                lastWallNormal = hit.normal;
+                states.Change<WallDragPlayerState>();
+            }
+        }
+    }
+
+    public virtual void DirectionalJump(Vector3 direction, float height, float distance)
+    {
+        jumpCounter++;
+        verticalVelocity = Vector3.up * height;
+        lateralVelocity = direction * distance;
+        playerEvents.OnJump?.Invoke();
+    }
+    
+    
+    protected virtual bool DetectingLedge(float forwardDistance, float downwardDistance, out RaycastHit ledgeHit)
+    {
+        var contactOffset = Physics.defaultContactOffset + positionDelta;
+        var ledgeMaxDistance = radius + forwardDistance;
+        var ledgeHeightOffset = height * 0.5f + contactOffset;
+        var upwardOffset = transform.up * ledgeHeightOffset;
+        var forwardOffset = transform.forward * ledgeMaxDistance;
+
+        if (Physics.Raycast(position + upwardOffset, transform.forward, ledgeMaxDistance,
+                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore) ||
+            Physics.Raycast(position + forwardOffset * .01f, transform.up, ledgeHeightOffset,
+                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+        {
+            ledgeHit = new RaycastHit();
+            return false;
+        }
+
+        var origin = position + upwardOffset + forwardOffset;
+        var distance = downwardDistance + contactOffset;
+			
+        return Physics.Raycast(origin, Vector3.down, out ledgeHit, distance,
+            stats.current.ledgeHangingLayers, QueryTriggerInteraction.Ignore);
     }
     
     protected virtual void OnTriggerStay(Collider other)

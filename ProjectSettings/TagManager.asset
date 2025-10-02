@@ -7,6 +7,7 @@ TagManager:
   - Ground_Stone
   - Hazard
   - Platform
+  - Volume/Water
   layers:
   - Default
   - TransparentFX
@@ -14,14 +15,14 @@ TagManager:
   - 
   - Water
   - UI
+  - Post Processing
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Ignore Projector
+  - Camera Obstructor
+  - Ignore Ledge Hanging
+  - Ignore Ledge Climbing
+  - Unstable Surface
+  - Ignore Wall Sliding
   - 
   - 
   - 

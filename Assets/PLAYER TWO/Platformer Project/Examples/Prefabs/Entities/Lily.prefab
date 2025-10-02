@@ -728,6 +728,7 @@ MonoBehaviour:
     OnDashStop:
       m_PersistentCalls:
         m_Calls: []
+  skin: {fileID: 7613926901110636397}
 --- !u!114 &1550898406063213424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -757,7 +758,7 @@ MonoBehaviour:
   - FallPlayerState
   - HurtPlayerState
   - HurtPlayerState
-  - HurtPlayerState
+  - WallDragPlayerState
   - HurtPlayerState
   - SwimPlayerState
   - CrouchPlayerState
@@ -1129,7 +1130,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9bc95a7f025ccb8479b9c858b7c18030, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.707
+      value: 2.206
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9bc95a7f025ccb8479b9c858b7c18030, type: 3}
       propertyPath: m_LocalPosition.z
