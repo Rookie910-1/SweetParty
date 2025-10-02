@@ -61,7 +61,10 @@ public class AirDivePlayerState :PlayerState
 
     public override void OnContact(Player player, Collider other)
     {
-        if(!player.isGrounded)
+        if (!player.isGrounded)
+        {
             player.WallDrag(other);
+            player.GrabPole(other);
+        }
     }
 }

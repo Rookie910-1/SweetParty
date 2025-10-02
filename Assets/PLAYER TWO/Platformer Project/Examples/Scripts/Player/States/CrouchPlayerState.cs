@@ -43,7 +43,7 @@ public class CrouchPlayerState : PlayerState
         
         else
         {
-            player.states.Change<IdelPlayerState>();
+            player.states.Change<IdlePlayerState>();
         }
     }
 

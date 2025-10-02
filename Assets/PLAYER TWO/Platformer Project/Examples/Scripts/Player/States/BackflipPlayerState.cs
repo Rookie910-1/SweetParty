@@ -26,7 +26,7 @@ public class BackflipPlayerState : PlayerState
         if(player.isGrounded)
         {
             player.lateralVelocity = Vector3.zero;
-            player.states.Change<IdelPlayerState>();
+            player.states.Change<IdlePlayerState>();
         }
         else if(player.verticalVelocity.y<0)
         {
@@ -40,6 +40,7 @@ public class BackflipPlayerState : PlayerState
     public override void OnContact(Player entity, Collider other)
     {
         entity.WallDrag(other);
+        entity.GrabPole(other);
     }
 }
 

@@ -32,7 +32,7 @@ public class SpinPlayerState : PlayerState
         {
             if (player.isGrounded)
             {
-                player.states.Change<IdelPlayerState>();
+                player.states.Change<IdlePlayerState>();
             }
             else
             {

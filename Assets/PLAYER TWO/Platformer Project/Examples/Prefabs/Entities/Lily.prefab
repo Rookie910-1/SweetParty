@@ -752,14 +752,14 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   states:
-  - IdelPlayerState
+  - IdlePlayerState
   - WalkPlayerState
   - BreakPlayerState
   - FallPlayerState
   - HurtPlayerState
   - HurtPlayerState
   - WallDragPlayerState
-  - HurtPlayerState
+  - PoleClimbingPlayerState
   - SwimPlayerState
   - CrouchPlayerState
   - CrawlingPlayerState
@@ -771,7 +771,7 @@ MonoBehaviour:
   - BackflipPlayerState
   - GlidingPlayerState
   - DashPlayerState
-  - IdelPlayerState
+  - IdlePlayerState
 --- !u!114 &6500228138498905214
 MonoBehaviour:
   m_ObjectHideFlags: 0

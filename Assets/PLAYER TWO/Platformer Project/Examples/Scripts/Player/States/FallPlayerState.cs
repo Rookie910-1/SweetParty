@@ -29,13 +29,14 @@ public class FallPlayerState : PlayerState
         
         if(player.isGrounded)
         {
-            player.states.Change<IdelPlayerState>();
+            player.states.Change<IdlePlayerState>();
         }
     }
 
     public override void OnContact(Player entity, Collider other)
     {
         entity.WallDrag(other);
+        entity.GrabPole(other);
     }
 }
 

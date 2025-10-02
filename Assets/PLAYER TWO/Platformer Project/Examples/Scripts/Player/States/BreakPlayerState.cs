@@ -31,7 +31,7 @@ public class BreakPlayerState : PlayerState
 
             if (player.lateralVelocity.sqrMagnitude == 0)
             {
-                player.states.Change<IdelPlayerState>();
+                player.states.Change<IdlePlayerState>();
             }
         }
         

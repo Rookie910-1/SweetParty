@@ -13,7 +13,7 @@ public class HurtPlayerState : PlayerState
         {
             if (player.health.current > 0)
             {
-                player.states.Change<IdelPlayerState>();
+                player.states.Change<IdlePlayerState>();
             }
             else
             {

@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-public class IdelPlayerState : PlayerState
+public class IdlePlayerState : PlayerState
 {
     protected override void OnEnter(Player player)
     {

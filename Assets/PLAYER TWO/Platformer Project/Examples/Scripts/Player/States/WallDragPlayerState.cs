@@ -29,7 +29,7 @@ public class WallDragPlayerState :PlayerState
 
         if (player.isGrounded || !player.CapsuleCast(-player.transform.forward, player.radius))
         {
-            player.states.Change<IdelPlayerState>();
+            player.states.Change<IdlePlayerState>();
         }
         else if (player.inputs.GetJumpDown())
         {

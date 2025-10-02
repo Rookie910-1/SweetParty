@@ -27,7 +27,7 @@ public class GlidingPlayerState :PlayerState
 
        if (player.isGrounded)
        {
-           player.states.Change<IdelPlayerState>();
+           player.states.Change<IdlePlayerState>();
        }
        else if(!player.inputs.GetGlide())
        {
@@ -52,5 +52,6 @@ public class GlidingPlayerState :PlayerState
     public override void OnContact(Player player, Collider other)
     {
         player.WallDrag(other);
+        player.GrabPole(other);
     }
 }

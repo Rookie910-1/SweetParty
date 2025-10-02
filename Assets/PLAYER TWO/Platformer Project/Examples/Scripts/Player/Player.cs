@@ -32,6 +32,8 @@ public class Player : Entity<Player>
     public bool holding { get; protected set; }
     
     public Vector3 lastWallNormal { get; protected set; }
+    
+    public Pole pole { get; protected set; }
 
     protected const float k_waterExitOffset = 0.25f;
     
@@ -292,6 +294,16 @@ public class Player : Entity<Player>
         if (onWater)
         {
             onWater = false;
+        }
+    }
+    
+    public virtual void GrabPole(Collider other)
+    {
+        if (stats.current.canPoleClimb && velocity.y <= 0
+                                       && !holding && other.TryGetComponent(out Pole pole))
+        {
+            this.pole = pole;
+            states.Change<PoleClimbingPlayerState>();
         }
     }
 
